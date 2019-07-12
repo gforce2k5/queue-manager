@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background-color: rgba(255, 94, 0, 0.938);
+  color: white;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+button:disabled {
+  opacity: 0.5;
+}

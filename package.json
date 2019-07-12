@@ -2,18 +2,23 @@
   "name": "queue-manager",
   "version": "0.0.1",
   "description": "Final project for Full Stack course",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git",
-    "url": "final-project"
+    "type": "git"
   },
   "author": "Guy Even",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.6",
+    "ejs": "^2.6.2",
     "express": "^4.17.1",
-    "socket.io": "^2.2.0"
+    "express-session": "^1.16.2",
+    "mongoose": "^5.6.3",
+    "socket.io": "^2.2.0",
+    "uuid": "^3.3.2"
   }
 }
