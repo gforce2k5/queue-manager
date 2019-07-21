@@ -1,8 +1,11 @@
 <% include partials/header %>
-<button id="get-number">Get Number</button>
-<div class="number">
+<div id="form">
+  <input type="email" placeholder="הכנס אימייל לקבלת הודעה ברגע שמגיע תורך">
+  <button id="get-number">קח מספר</button>
+  <div class="number">
+  </div>
 </div>
 <script src="/js/script.js"></script>
 <input type="hidden" id="token" value="<%= token %>">
-<input type="hidden" id="id" value="<%= id%>">
+<input type="hidden" id="id" value="<%= id %>">
 <% include partials/footer %>

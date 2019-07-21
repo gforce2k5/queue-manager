@@ -5,7 +5,7 @@ const uuidv4 = require('uuid/v4');
 const tokens = [];
 
 module.exports = {
-  generateToken: id => {
+  generateToken(id) {
     let token = bcrypt.hashSync(uuidv4(), parseInt(id));
     tokens[id] = token;
     return token;
