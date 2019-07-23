@@ -28,3 +28,9 @@ button:disabled {
   margin: 0 auto;
   width: 405px;
 }
+
+.number {
+  font-size: 100px;
+  text-align: center;
+  border: 1px solid #010101;
+}

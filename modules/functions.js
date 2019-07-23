@@ -6,7 +6,7 @@ const tokens = [];
 
 module.exports = {
   generateToken(id) {
-    let token = bcrypt.hashSync(uuidv4(), parseInt(id));
+    const token = bcrypt.hashSync(uuidv4(), parseInt(id));
     tokens[id] = token;
     return token;
   },

@@ -7,10 +7,24 @@ document.querySelector('#get-number').addEventListener('click', function(e) {
 });
 
 async function getNumber() {
-  var id = document.querySelector('#id').value;
-  var token = document.querySelector('#token');
-  var response = await fetch(`/enqueue?token=${token.value}&id=${id}`);
-  var number = await response.json();
-  document.querySelector('.number').textContent = number.c;
-  token.value = number.token;
+  const id = document.querySelector('#id').value;
+  const token = document.querySelector('#token');
+  const body = new URLSearchParams();
+  body.append('id', id);
+  body.append('token', token.value);
+  const response = await fetch('/customers', {
+    heasders: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    method: 'PUT',
+    body: body,
+    cache: 'default',
+  });
+  const number = await response.json();
+  if (number.error) {
+    console.log(number);
+  } else {
+    document.querySelector('.number').textContent = number.c;
+    token.value = number.token;
+  }
 }
