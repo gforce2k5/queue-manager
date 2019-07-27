@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const http = require('http');
+const socketIo = require('socket.io');
 const functions = require('./modules/functions');
 const data = require('./modules/data');
 
@@ -14,6 +16,8 @@ const customerRoutes = require('./routes/customers');
 
 // SETTINGS
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 mongoose.set('useNewUrlParser', true);
 mongoose.connect('mongodb://localhost:27017/queue');
 app.use(express.static(`${__dirname}/public`));
@@ -51,6 +55,13 @@ async function init() {
 }
 init();
 
+// SOCKET.IO
+io.on('connection', (socket) => {
+  socket.on('enqueue', () => {
+    io.emit('enqueue-done', JSON.stringify(data.queue[data.queue.length - 1]));
+  });
+});
+
 // ROUTES
 app.get('/', (req, res) => {
   if (req.query.hasOwnProperty('id')) {
@@ -58,8 +69,12 @@ app.get('/', (req, res) => {
   } else res.status(500).send('Error');
 });
 
+app.get('/terminal', (req, res) => {
+  res.render('terminal', {pageTitle: 'Terminal'});
+});
+
 app.use('/customers', customerRoutes);
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log('App running on port 3000');
 });

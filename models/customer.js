@@ -5,7 +5,7 @@ const customerSchema = new mongoose.Schema({
   arrivalTime: {type: Date, defaily: Date.now},
   resolveTime: Date,
   endTime: Date,
-  phone: Number,
+  email: String,
 });
 
 module.exports = mongoose.model('Customer', customerSchema);

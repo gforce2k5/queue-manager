@@ -5,27 +5,42 @@ const data = require('../modules/data');
 
 const router = express.Router();
 
-router.use('/', (req, res, next) => {
+// MIDDLEWARE
+
+const checkToken = (req, res, next) => {
   const id = req.body.id;
   if (req.body.token == functions.getToken(id)) {
     functions.generateToken(id);
     next();
   } else
-    res.status(500).send(JSON.stringify({error: 'Eroor'}));
+    res.status(500).json({error: 'Eroor'});
+};
+
+// ROUTES
+
+router.get('/', async (req, res) => {
+  try {
+    const customers = await Customer.find({endTime: undefined});
+    res.json(customers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({error: 'Error'});
+  }
 });
 
-router.put('/',  async (req, res) => {
+router.post('/', checkToken, async (req, res) => {
   try {
     const customer = await Customer.create({
       number: data.counter,
       arrivalTime: new Date(),
+      email: req.body.email,
     });
     data.queue.push(customer);
     data.counter++;
-    res.send(JSON.stringify({c: customer.number, token: functions.getToken(req.body.id)}));
+    res.json({c: customer.number, token: functions.getToken(req.body.id)});
   } catch (err) {
     console.log(err);
-    res.status(500).send(JSON.stringify({error: 'Error'}));
+    res.status(500).json({error: 'Error'});
   }
 });
 
