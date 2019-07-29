@@ -1,0 +1,7 @@
+<% include partials/header %>
+
+<h1><%= data ? `מספר ${data.customer.number} לדלפק ${data.terminal}`: '' %></h1>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/view.js"></script>
+<% include partials/footer %>

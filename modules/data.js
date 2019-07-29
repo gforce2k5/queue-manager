@@ -1,4 +1,7 @@
 module.exports = {
   counter: undefined,
-  queue: []
+  hasInitialized: false,
+  lastCustomer: undefined,
+  queue: [],
+  settings: {},
 };

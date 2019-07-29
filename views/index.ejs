@@ -1,13 +1,15 @@
 <% include partials/header %>
-<div id="form">
-  <input type="email" placeholder="הכנס אימייל לקבלת הודעה ברגע שמגיע תורך">
-  <button id="get-number">קח מספר</button>
-  <div class="number">
-  </div>
-</div>
-<input type="hidden" id="token" value="<%= token %>">
-<input type="hidden" id="id" value="<%= id %>">
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/script.js"></script>
+<h1>אינדקס</h1>
+<a href="/view">מסך תצוגה</a>
+
+<h3>מכשירי הנפקת מספרים</h3>
+<% for (let i = 0; i < numberOfNumberGenerators; i++) { %>
+  <p><a href="/numbers?id=<%= i %>">מכשיר <%= i + 1 %></a></p>
+<% } %>
+
+<h3>מסופים</h3>
+<ul id="terminal-list"></ul>
+
+<script src="/js/index.js"></script>
 <% include partials/footer %>

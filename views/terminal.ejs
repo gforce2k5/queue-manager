@@ -1,8 +1,13 @@
 <% include partials/header %>
-
+<h1 id="current-customer"><%= terminal.currentCustomer ? terminal.currentCustomer.number : '' %></h1>
 <ul class="list">
 </ul>
-
+<input type="hidden" id="id" value="<%= terminal._id %>">
+<input type="hidden" id="tid" value="<%= terminal.tid %>">
+<button id="accept" disabled>קבל לקוח</button>
+<script>
+  let currentCustomer = '<%= terminal.currentCustomer ? terminal.currentCustomer._id : '' %>';
+</script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/terminal.js"></script>
 <% include partials/footer %>
