@@ -1,20 +1,20 @@
-const list = document.querySelector('#terminal-list');
+const socket = io();
 
-const loadTerminals = async () => {
-  try {
-    // await fetch('/terminals', {method: 'DELETE'});
-    const response = await fetch('/terminals');
-    const terminals = await response.json();
-    terminals.forEach((terminal, index) => {
-      list.innerHTML += `
-        <li>
-          <a href="/terminals/${terminal._id}" target="_blank">מסוף ${index + 1}</a>
-        </li>
-      `
-    });
-  } catch (err) {
-    console.log(err);
-  }
-}
+const terminalList = document.querySelector('#terminal-list');
+const generatorList = document.querySelector('#generator-list');
 
-loadTerminals();
+socket.on('new-terminal', tid => {
+  terminalList.querySelectorAll('li')[tid - 1].querySelector('a').setAttribute('href', 'javascript:;');
+});
+
+socket.on('new-generator', id => {
+  generatorList.querySelectorAll('li')[id].querySelector('a').setAttribute('href', 'javascript:;');
+})
+
+socket.on('terminal-disconnect', terminal => {
+  terminalList.querySelectorAll('li')[terminal.tid - 1].querySelector('a').setAttribute('href', `/terminals/${terminal._id}`);
+});
+
+socket.on('generator-disconnect', id => {
+  generatorList.querySelectorAll('li')[id].querySelector('a').setAttribute('href', `/numbers?id=${id}`);
+});

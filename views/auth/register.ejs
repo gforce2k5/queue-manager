@@ -1,0 +1,13 @@
+<% include ../partials/header %>
+
+<form method="POST">
+  <input type="text" name="username" placeholder="שם משתמש"><br/>
+  <input type="password" name="password" placeholder="סיסמא"><br/>
+  <input type="password" name="password2" placeholder="סיסמא בשנית"><br/>
+  <input type="text" name="user[firstName]" placeholder="שם פרטי"><br/>
+  <input type="text" name="user[lastName]" placeholder="שם משפחה"><br/>
+  <input type="email" name="user[email]" placeholder="דואר אלקטרוני"><br/>
+  <button>Register</button>
+</form>
+
+<% include ../partials/footer %>

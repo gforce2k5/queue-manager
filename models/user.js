@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const LocalStrategyMongoose = require('passport-local-mongoose');
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -9,4 +10,6 @@ const userSchema = new mongoose.Schema({
   isAdmin: {type: Boolean, default: false}
 });
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.plugin(LocalStrategyMongoose);
+
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

@@ -2,7 +2,7 @@ const acceptButton = document.querySelector('#accept');
 const h1 = document.querySelector('#current-customer');
 
 const list = document.querySelector('.list');
-const socket = io();
+const socket = io(`http://localhost:3000?tid=${document.querySelector('#tid').value}`);
 (async () => {
   const response = await fetch('/customers');
   const customers = await response.json();
@@ -59,4 +59,4 @@ socket.on('enqueue-done', (msg) => {
 socket.on('dequeue-done', (msg) => {
   customer = JSON.parse(msg).customer;
   removeCustomer(customer);
-})
+});

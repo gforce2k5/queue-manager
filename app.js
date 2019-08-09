@@ -1,57 +1,72 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
 const bodyParser = require('body-parser');
+const express = require('express');
 const http = require('http');
+const methodOverride = require('method-override');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
 const socketIo = require('socket.io');
+
+// MODULES
 const functions = require('./modules/functions');
-const data = require('./modules/data');
+
+// MODELS
+const User = require('./models/User');
 
 // ROUTERS
+const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/auth');
 const customerRoutes = require('./routes/customer');
-const terminalRoutes = require('./routes/termimal');
 const numberRoutes = require('./routes/number');
+const terminalRoutes = require('./routes/termimal');
+const viewRoutes = require('./routes/view');
 
 // SETTINGS
 const app = express();
-const server = http.createServer(app);
+app.set('view engine', 'ejs');
+require('dotenv').config();
 
 // SOCKET.IO
+const server = http.createServer(app);
 require('./modules/io')(socketIo(server));
 
+// MONGOOSE SETTINGS
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost:27017/queue');
-app.use(express.static(`${__dirname}/public`));
-app.use(session({
-  secret: 'Guy has a cat named Panda',
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
+mongoose.connect(process.env.DB_URL);
 
 // MIDDLEWARES
-app.use((req, res, next) => {
-  if (!data.hasInitialized) res.status(500).send('Internal server error');
-  else next();
-})
+const middlewares = require('./modules/middlewares');
+app.use(methodOverride('_method'));
+app.use(middlewares.logRequest);
+app.use(express.static(`${__dirname}/public`));
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(middlewares.saveUser);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(middlewares.isInitialized);
+
+// PASSPORT MIDDLEWARES
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // INIT
 functions.init();
 
 // ROUTES
-app.get('/', async (req, res) => {
-  res.render('index', { pageTitle: 'Index', numberOfNumberGenerators: data.settings.numberOfNumberGenerators});
-});
-
-app.get('/view', (req, res) => {
-  res.render('view', { pageTitle: 'View', data: data.lastCustomer });
-});
-
-app.use('/numbers', numberRoutes);
+app.use('/', authRoutes);
+app.use('/admin', adminRoutes);
 app.use('/customers', customerRoutes);
+app.use('/numbers', numberRoutes);
 app.use('/terminals', terminalRoutes);
+app.use('/view', viewRoutes);
 
 server.listen(3000, () => {
   console.log('App running on port 3000');

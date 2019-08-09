@@ -34,3 +34,11 @@ button:disabled {
   text-align: center;
   border: 1px solid #010101;
 }
+
+a {
+  color: blue;
+}
+
+a[href="javascript:;"] {
+  color: red;
+}

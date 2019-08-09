@@ -1,4 +1,6 @@
-document.querySelector('#get-number').addEventListener('click', function(e) {
+const socket = io(`http://localhost:3000?nid=${document.querySelector('#id').value}`);
+
+document.querySelector('#get-number').addEventListener('click', function() {
   this.disabled = true;
   getNumber();
   setTimeout(() => {
@@ -27,7 +29,6 @@ async function getNumber() {
     console.log(number);
   } else {
     email.value = '';
-    const socket = io();
     socket.emit('enqueue');
     document.querySelector('.number').textContent = number.c;
     token.value = number.token;

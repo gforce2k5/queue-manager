@@ -1,5 +1,5 @@
 <% include partials/header %>
-<h1 id="current-customer"><%= terminal.currentCustomer ? terminal.currentCustomer.number : '' %></h1>
+<h1 id="current-customer">לקוח נוכחי: <%= terminal.currentCustomer ? terminal.currentCustomer.number : '' %></h1>
 <ul class="list">
 </ul>
 <input type="hidden" id="id" value="<%= terminal._id %>">

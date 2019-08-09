@@ -4,12 +4,39 @@
 <a href="/view">מסך תצוגה</a>
 
 <h3>מכשירי הנפקת מספרים</h3>
+<ul id="generator-list">
 <% for (let i = 0; i < numberOfNumberGenerators; i++) { %>
-  <p><a href="/numbers?id=<%= i %>">מכשיר <%= i + 1 %></a></p>
+  <li>
+    <% if (activeGenerators[i]) { %>
+      <a href="javascript:;">
+    <% } else { %>
+      <a href="/numbers?id=<%= i %>">
+    <% } %>
+      מכשיר <%= i + 1 %>
+    </a>
+  </li>
 <% } %>
+</ul>
 
 <h3>מסופים</h3>
-<ul id="terminal-list"></ul>
+<ul id="terminal-list">
+  <% terminals.forEach((terminal, index) => { %>
+    <li>
+      <% if (terminal.active) { %>
+        <a href="javascript:;">
+      <% } else { %>
+        <a href="/terminals/<%= terminal._id %>">
+      <% } %>
+        מסוף <%= index + 1 %>
+      </a>
+    </li>
+  <% }); %>
+</ul>
 
+<% if (user && user.isAdmin) { %>
+  <a href="/admin">ניהול מערכת</a>
+<% } %>
+
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>
 <% include partials/footer %>

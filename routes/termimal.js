@@ -1,25 +1,16 @@
 const express = require('express');
 const data = require('../modules/data');
+const middlewares = require('../modules/middlewares');
 const Customer = require('../models/customer');
 const Terminal = require('../models/terminal');
 
 const router = express.Router();
 
-// INDEX
-router.get('/', async (req, res) => {
-  try {
-    const terminals = await Terminal.find();
-    res.json(terminals);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-});
-
 // SHOW
-router.get('/:id', async (req, res) => {
+router.get('/:id', middlewares.isUserLoggedIn, async (req, res) => {
   try {
     const terminal = await Terminal.findById(req.params.id).populate('currentCustomer').exec();
+    if (data.activeTerminals[terminal.tid - 1]) return res.end();
     res.render('terminal', {pageTitle: `Terminal ${terminal.tid}`, terminal: terminal});
   } catch (err) {
     console.log(err);
@@ -28,7 +19,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // UPDATE
-router.put('/:id', async (req, res) => {
+router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
   try {
     await Terminal.findByIdAndUpdate(req.params.id, {$set: {
       currentCustomer: req.body.currentCustomer
@@ -41,7 +32,7 @@ router.put('/:id', async (req, res) => {
 
 // DESTROY
 // CREATE
-router.delete('/', async (req, res) => {
+router.delete('/', middlewares.isAdmin, async (req, res) => {
   const p1 = Customer.deleteMany({resolved: false});
   const p2 = Terminal.deleteMany({});
   try {
