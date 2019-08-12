@@ -47,13 +47,15 @@ router.post('/', checkToken, async (req, res) => {
 router.put('/:id', userLoggedIn, async (req, res) => {
   const currentId = req.body.currentId;
   const terminalId = req.body.terminalId;
+  const promises = [];
 
-  const p1 = Customer.findByIdAndUpdate(req.params.id, {$set: {
-    acceptTime: new Date(),
-    accepted: true,
-  }});
+  if (req.params.id != '0') {
+    promises.push(Customer.findByIdAndUpdate(req.params.id, {$set: {
+      acceptTime: new Date(),
+      accepted: true,
+    }}));
+  }
 
-  const promises = [p1];
   if (currentId != '') {
     promises.push(Customer.findByIdAndUpdate(currentId, {$set: {
       resolveTime: new Date(),

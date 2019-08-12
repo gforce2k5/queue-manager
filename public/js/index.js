@@ -4,17 +4,29 @@ const terminalList = document.querySelector('#terminal-list');
 const generatorList = document.querySelector('#generator-list');
 
 socket.on('new-terminal', tid => {
-  terminalList.querySelectorAll('li')[tid - 1].querySelector('a').setAttribute('href', 'javascript:;');
+  blurImage(terminalList, tid - 1);
 });
 
 socket.on('new-generator', id => {
-  generatorList.querySelectorAll('li')[id].querySelector('a').setAttribute('href', 'javascript:;');
+  blurImage(generatorList, id);
 })
 
 socket.on('terminal-disconnect', terminal => {
-  terminalList.querySelectorAll('li')[terminal.tid - 1].querySelector('a').setAttribute('href', `/terminals/${terminal._id}`);
+  unblurImage(terminalList, terminal.tid - 1, `/terminals/${terminal._id}`);
 });
 
 socket.on('generator-disconnect', id => {
-  generatorList.querySelectorAll('li')[id].querySelector('a').setAttribute('href', `/numbers?id=${id}`);
+  unblurImage(generatorList, id, `/numbers?id=${id}`);
 });
+
+function blurImage(listNode, index) {
+  const currentNode = listNode.querySelector(`li:nth-of-type(${index + 1})`);
+  currentNode.querySelector('a').setAttribute('href', 'javascript:;');
+  currentNode.querySelector('img').classList.add('active');
+}
+
+function unblurImage(listNode, index, url) {
+  const currentNode = listNode.querySelector(`li:nth-of-type(${index + 1})`);
+  currentNode.querySelector('a').setAttribute('href', url);
+  currentNode.querySelector('img').classList.remove('active');
+}

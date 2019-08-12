@@ -1,9 +1,16 @@
 <% include ../partials/header %>
-
-<form method="POST">
-  <input type="text" name="username" placeholder="שם משתמש"><br/>
-  <input type="password" name="password" placeholder="סיסמא"><br/>
-  <button>Login</button>
-</form>
-
+<div class="container">
+  <h1>התחברות למערכת</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label for="username">שם משתמש: </label>
+      <input type="text" class="form-control" name="username" id="username">
+    </div>
+    <div class="form-group">
+      <label for="password">סיסמה: </label>
+      <input type="password" class="form-control" name="password" id="password">
+    </div>
+    <button type="submit" class="btn btn-primary">היכנס</button>
+  </form>
+</div>
 <% include ../partials/footer %>

@@ -1,4 +1,8 @@
-const socket = io(`http://localhost:3000?nid=${document.querySelector('#id').value}`);
+const socket = io({
+  query: {
+    nid: document.querySelector('#id').value,
+  }
+});
 
 document.querySelector('#get-number').addEventListener('click', function() {
   this.disabled = true;

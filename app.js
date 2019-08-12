@@ -9,6 +9,7 @@ const session = require('express-session');
 const socketIo = require('socket.io');
 
 // MODULES
+const data = require('./modules/data');
 const functions = require('./modules/functions');
 
 // MODELS
@@ -26,6 +27,8 @@ const viewRoutes = require('./routes/view');
 const app = express();
 app.set('view engine', 'ejs');
 require('dotenv').config();
+const port = process.env.PORT || 3000;
+const ip = process.env.IP || 'localhost';
 
 // SOCKET.IO
 const server = http.createServer(app);
@@ -68,6 +71,7 @@ app.use('/numbers', numberRoutes);
 app.use('/terminals', terminalRoutes);
 app.use('/view', viewRoutes);
 
-server.listen(3000, () => {
-  console.log('App running on port 3000');
+server.listen(port, ip, () => {
+  data.server = `http://${server.address().address}:${server.address().port}`;
+  console.log(`App running on ${data.server}`);
 });

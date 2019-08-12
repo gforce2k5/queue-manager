@@ -1,13 +1,20 @@
 <% include partials/header %>
-<div id="form">
-  <input type="email" placeholder="הכנס אימייל לקבלת הודעה ברגע שמגיע תורך">
-  <button id="get-number">קח מספר</button>
+
+<div class="container">
+  <div class="row">
+    <div class="col-9">
+      <input type="email" class="form-control" placeholder="הכנס אימייל לקבלת הודעה ברגע שמגיע תורך">
+    </div>
+    <div class="col-3">
+      <button id="get-number" class="btn btn-primary btn-block">קח מספר</button>
+    </div>
+  </div>
   <div class="number">
   </div>
 </div>
 <input type="hidden" id="token" value="<%= token %>">
 <input type="hidden" id="id" value="<%= id %>">
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/number.js"></script>
+
 <% include partials/footer %>

@@ -1,13 +1,23 @@
 <% include partials/header %>
-<h1 id="current-customer">לקוח נוכחי: <%= terminal.currentCustomer ? terminal.currentCustomer.number : '' %></h1>
-<ul class="list">
-</ul>
-<input type="hidden" id="id" value="<%= terminal._id %>">
-<input type="hidden" id="tid" value="<%= terminal.tid %>">
-<button id="accept" disabled>קבל לקוח</button>
+
+<div class="container">
+  <h1>
+    לקוח נוכחי:
+    <span id="current-customer">
+      <%= terminal.currentCustomer ? terminal.currentCustomer.number : '' %>
+    </span>
+  </h1>
+  <ul id="list" class="list-group">
+  </ul>
+  <input type="hidden" id="id" value="<%= terminal._id %>">
+  <input type="hidden" id="tid" value="<%= terminal.tid %>">
+  <button class="btn btn-primary" id="accept" disabled>קבל לקוח</button>
+  <button class="btn btn-danger" id="end-day" style="display: none;">סיים יום</button>
+</div>
 <script>
   let currentCustomer = '<%= terminal.currentCustomer ? terminal.currentCustomer._id : '' %>';
 </script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/terminal.js"></script>
+
 <% include partials/footer %>

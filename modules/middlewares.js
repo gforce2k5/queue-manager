@@ -22,7 +22,7 @@ module.exports = {
   },
 
   logRequest(req, res, next) {
-    // console.log(req.path, req.method);
+    console.log(req.hostname, req.path, req.method);
     next();
   },
 };

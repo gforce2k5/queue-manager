@@ -1,13 +1,33 @@
 <% include ../partials/header %>
 
-<form method="POST">
-  <input type="text" name="username" placeholder="שם משתמש"><br/>
-  <input type="password" name="password" placeholder="סיסמא"><br/>
-  <input type="password" name="password2" placeholder="סיסמא בשנית"><br/>
-  <input type="text" name="user[firstName]" placeholder="שם פרטי"><br/>
-  <input type="text" name="user[lastName]" placeholder="שם משפחה"><br/>
-  <input type="email" name="user[email]" placeholder="דואר אלקטרוני"><br/>
-  <button>Register</button>
-</form>
+<div class="container">
+  <form method="POST">
+    <div class="form-group">
+      <label for="username">שם משתמ</label>
+      <input type="text" class="form-control" id="username" name="username">
+    </div>
+    <div class="form-group">
+      <label for="password">סיסמה</label>
+      <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <div class="form-group">
+      <label for="password2">סיסמה בשנית</label>
+      <input type="password" class="form-control" id="password2" name="password2">
+    </div>
+    <div class="form-group">
+      <label for="firstname">שם פרטי</label>
+      <input type="text" class="form-control" id="firstname" name="user[firstname]">
+    </div>
+    <div class="form-group">
+      <label for="lastname">שם משפחה</label>
+      <input type="text" class="form-control" id="lastname" name="user[lastname]">
+    </div>
+    <div class="form-group">
+      <label for="email">דואר אלקטרוני</label>
+      <input type="email" class="form-control" id="email" name="user[email]">
+    </div>
+    <button type="submit" class="btn btn-primary">הירשם</button>
+  </form>
+</div>
 
 <% include ../partials/footer %>

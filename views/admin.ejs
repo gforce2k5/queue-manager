@@ -1,9 +1,11 @@
 <% include partials/header %>
 
-<a href="/register">רישום משתמש חדש</a>
+<div class="container">
+  <a href="/register">רישום משתמש חדש</a>
 
-<form action="/terminals?_method=DELETE" method="POST">
-  <button>איפוס טרמינלים</button>
-</form>
+  <form action="/terminals?_method=DELETE" method="POST">
+    <button class="btn btn-danger">איפוס טרמינלים</button>
+  </form>
+</div>
 
 <% include partials/footer %>

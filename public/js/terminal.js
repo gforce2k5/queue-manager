@@ -1,8 +1,13 @@
 const acceptButton = document.querySelector('#accept');
+const endDayButton = document.querySelector('#end-day');
 const h1 = document.querySelector('#current-customer');
 
-const list = document.querySelector('.list');
-const socket = io(`http://localhost:3000?tid=${document.querySelector('#tid').value}`);
+const list = document.querySelector('#list');
+const socket = io({
+  query: {
+    tid: document.querySelector('#tid').value,
+  }
+});
 (async () => {
   const response = await fetch('/customers');
   const customers = await response.json();
@@ -11,16 +16,22 @@ const socket = io(`http://localhost:3000?tid=${document.querySelector('#tid').va
 
 const addCustomer = customer => {
   list.innerHTML += `
-    <li data-id="${customer._id}">
+    <li class="list-group-item" data-id="${customer._id}">
       ${customer.number} - ${customer.email ? customer.email : ''}
     </li>
   `;
   acceptButton.disabled = false;
+  endDayButton.style.display = 'none';
 };
 
 const removeCustomer = customer => {
   list.querySelector(`li[data-id="${customer._id}"]`).remove();
-  if (list.querySelectorAll('li').length == 0) acceptButton.disabled = true;
+  if (list.querySelectorAll('li').length == 0) {
+    acceptButton.disabled = true;
+    if (currentCustomer) {
+      endDayButton.style.display = 'block'
+    }
+  }
 }
 
 acceptButton.addEventListener('click', async function () {
@@ -51,6 +62,27 @@ acceptButton.addEventListener('click', async function () {
   }, 500);
 });
 
+endDayButton.addEventListener('click', async () => {
+  const body = new URLSearchParams();
+  body.append('currentId', currentCustomer);
+  body.append('terminalId', document.querySelector('#id').value);
+  try {
+    await fetch(`/customers/0`, {
+      method: 'PUT',
+      heasders: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+    h1.textContent = '';
+    currentCustomer = undefined;
+    socket.emit('dequeue', document.querySelector('#tid').value);
+  } catch (err) {
+    console.log(err);
+  }
+  this.style.display = 'none';
+});
+
 socket.on('enqueue-done', (msg) => {
   customer = JSON.parse(msg);
   addCustomer(customer);
@@ -58,5 +90,5 @@ socket.on('enqueue-done', (msg) => {
 
 socket.on('dequeue-done', (msg) => {
   customer = JSON.parse(msg).customer;
-  removeCustomer(customer);
+  if (customer) removeCustomer(customer);
 });

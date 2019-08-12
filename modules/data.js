@@ -1,6 +1,6 @@
 module.exports = {
-  activeTerminals: [],
   activeGenerators: [],
+  activeTerminals: [],
   counter: undefined,
   hasInitialized: false,
   lastCustomer: undefined,
