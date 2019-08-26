@@ -5,15 +5,17 @@ module.exports = {
     if (!data.hasInitialized) res.status(500).send('Internal server error');
     else next();
   },
-  
+
   isUserLoggedIn(req, res, next) {
-    if (req.user) next();
-    else res.redirect('/login');
+    // if (req.user) next();
+    // else res.redirect('/login');
+    next();
   },
 
   isAdmin(req, res, next) {
-    if (req.user && req.user.isAdmin) next();
-    else res.redirect('/login');
+    // if (req.user && req.user.isAdmin) next();
+    // else res.redirect('/login');
+    next();
   },
 
   saveUser(req, res, next) {
@@ -22,7 +24,7 @@ module.exports = {
   },
 
   logRequest(req, res, next) {
-    console.log(req.hostname, req.path, req.method);
+    console.log(req.connection.remoteAddress, req.path, req.method);
     next();
   },
 };

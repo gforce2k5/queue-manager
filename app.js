@@ -9,7 +9,6 @@ const session = require('express-session');
 const socketIo = require('socket.io');
 
 // MODULES
-const data = require('./modules/data');
 const functions = require('./modules/functions');
 
 // MODELS
@@ -28,7 +27,6 @@ const app = express();
 app.set('view engine', 'ejs');
 require('dotenv').config();
 const port = process.env.PORT || 3000;
-const ip = process.env.IP || 'localhost';
 
 // SOCKET.IO
 const server = http.createServer(app);
@@ -47,12 +45,12 @@ app.use(express.static(`${__dirname}/public`));
 app.use(session({
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(middlewares.saveUser);
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(middlewares.isInitialized);
 
 // PASSPORT MIDDLEWARES
@@ -71,7 +69,6 @@ app.use('/numbers', numberRoutes);
 app.use('/terminals', terminalRoutes);
 app.use('/view', viewRoutes);
 
-server.listen(port, ip, () => {
-  data.server = `http://${server.address().address}:${server.address().port}`;
-  console.log(`App running on ${data.server}`);
+server.listen(port, () => {
+  console.log(`App running on ${port}`);
 });

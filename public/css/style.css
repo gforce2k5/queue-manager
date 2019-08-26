@@ -16,6 +16,15 @@
   border: 1px solid #010101;
 }
 
+.centerxy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 720px;
+  z-index: 999;
+}
+
 a[href="javascript:;"] {
   color: red;
 }

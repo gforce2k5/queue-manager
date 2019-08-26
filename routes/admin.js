@@ -1,10 +1,21 @@
 const express = require('express');
 const middlewares = require('../modules/middlewares');
 
-const router = express.Router();
+// ROUTERS
+const dataRoutes = require('./admin/data');
+const dashboardRoutes = require('./admin/dashboard');
 
-router.get('/', middlewares.isAdmin, (req, res) => {
-  res.render('admin', { pageTitle: 'Admin' });
+const router = new express.Router();
+
+router.get('/', (req, res) => {
+  res.render('admin', {pageTitle: 'Admin'});
 });
+
+// MIDDLEWARES
+router.use(middlewares.isAdmin);
+
+// ROUTES
+router.use('/data', dataRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 module.exports = router;

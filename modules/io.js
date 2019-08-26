@@ -1,8 +1,8 @@
 const Terminal = require('../models/terminal');
 const data = require('./data');
+const functions = require('./functions');
 
-module.exports = io => {
-
+module.exports = (io) => {
   io.on('connection', (socket) => {
     const tid = parseInt(socket.handshake.query.tid);
     if (!isNaN(tid)) {
@@ -17,12 +17,21 @@ module.exports = io => {
     }
 
     socket.on('enqueue', () => {
-      io.emit('enqueue-done', JSON.stringify(data.queue[data.queue.length - 1]));
+      io.emit('enqueue-done', data.queue[data.queue.length - 1]);
+      io.emit('enqueue-dash', {
+        customersWaiting: data.queue.length,
+      });
     });
 
-    socket.on('dequeue', msg => {
-      data.lastCustomer = { customer: data.queue.shift(), terminal: msg };
-      io.emit('dequeue-done', JSON.stringify(data.lastCustomer));
+    socket.on('dequeue', (msg) => {
+      data.lastCustomer = {customer: data.queue.shift(), terminal: msg};
+      data.customersServed++;
+      io.emit('dequeue-done', data.lastCustomer);
+      io.emit('dequeue-dash', {
+        customersServed: data.customersServed,
+        customersWaiting: data.queue.length,
+        lastCustomerTimes: functions.getCustomerTimes(data.lastCustomer),
+      });
     });
 
     socket.on('disconnect', async () => {
@@ -36,7 +45,6 @@ module.exports = io => {
         data.activeGenerators[nid] = false;
         io.emit('generator-disconnect', nid);
       }
-    })
+    });
   });
-
-}
+};

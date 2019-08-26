@@ -6,7 +6,7 @@ const middlewares = require('../modules/middlewares');
 const User = require('../models/user');
 const Terminal = require('../models/terminal');
 
-const router = express.Router();
+const router = new express.Router();
 
 router.get('/', middlewares.isUserLoggedIn, async (req, res) => {
   try {
@@ -15,10 +15,10 @@ router.get('/', middlewares.isUserLoggedIn, async (req, res) => {
       pageTitle: 'Index',
       numberOfNumberGenerators: data.settings.numberOfNumberGenerators,
       activeGenerators: data.activeGenerators,
-      terminals: terminals.map(terminal => {
+      terminals: terminals.map((terminal) => {
         terminal.active = data.activeTerminals[terminal.tid - 1];
         return terminal;
-      })
+      }),
     });
   } catch (err) {
     console.log(err);
@@ -27,12 +27,14 @@ router.get('/', middlewares.isUserLoggedIn, async (req, res) => {
 });
 
 router.get('/register', middlewares.isAdmin, (req, res) => {
-  res.render('auth/register', { pageTitle: 'Register' });
+  res.render('auth/register', {pageTitle: 'Register'});
 });
 
 router.post('/register', middlewares.isAdmin, async (req, res) => {
-  const user = new User({ ...req.body.user, username: req.body.username });
-  if (req.body.password !== req.body.password2) return res.send('Passwords do not match');
+  const user = new User({...req.body.user, username: req.body.username});
+  if (req.body.password !== req.body.password2) {
+    return res.send('Passwords do not match');
+  }
   try {
     await User.register(user, req.body.password);
     res.redirect('/admin');
@@ -43,7 +45,7 @@ router.post('/register', middlewares.isAdmin, async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  if (!req.user) res.render('auth/login', { pageTitle: 'Login' });
+  if (!req.user) res.render('auth/login', {pageTitle: 'Login'});
   else res.redirect('/');
 });
 
@@ -55,6 +57,6 @@ router.post('/login', passport.authenticate('local', {
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/login');
-})
+});
 
 module.exports = router;

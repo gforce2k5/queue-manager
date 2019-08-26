@@ -1,7 +1,7 @@
 const socket = io({
   query: {
     nid: document.querySelector('#id').value,
-  }
+  },
 });
 
 document.querySelector('#get-number').addEventListener('click', function() {
@@ -12,6 +12,9 @@ document.querySelector('#get-number').addEventListener('click', function() {
   }, 500);
 });
 
+/**
+ * Pulls a new number ticket
+ */
 async function getNumber() {
   const id = document.querySelector('#id').value;
   const token = document.querySelector('#token');

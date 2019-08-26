@@ -4,14 +4,18 @@ const middlewares = require('../modules/middlewares');
 const Customer = require('../models/customer');
 const Terminal = require('../models/terminal');
 
-const router = express.Router();
+const router = new express.Router();
 
 // SHOW
 router.get('/:id', middlewares.isUserLoggedIn, async (req, res) => {
   try {
-    const terminal = await Terminal.findById(req.params.id).populate('currentCustomer').exec();
+    const terminal =
+      await Terminal.findById(req.params.id).populate('currentCustomer').exec();
     if (data.activeTerminals[terminal.tid - 1]) return res.end();
-    res.render('terminal', {pageTitle: `Terminal ${terminal.tid}`, terminal: terminal});
+    res.render('terminal', {
+      pageTitle: `Terminal ${terminal.tid}`,
+      terminal: terminal,
+    });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
@@ -22,13 +26,13 @@ router.get('/:id', middlewares.isUserLoggedIn, async (req, res) => {
 router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
   try {
     await Terminal.findByIdAndUpdate(req.params.id, {$set: {
-      currentCustomer: req.body.currentCustomer
+      currentCustomer: req.body.currentCustomer,
     }});
   } catch (err) {
     res.sendStatus(500);
     console.log(err);
   }
-})
+});
 
 // DESTROY
 // CREATE
