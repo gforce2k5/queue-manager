@@ -20,6 +20,7 @@ module.exports = {
 
   saveUser(req, res, next) {
     res.locals.user = req.user;
+    res.locals.enableDarkMode = data.settings.enableDarkMode;
     next();
   },
 

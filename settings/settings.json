@@ -1,4 +1,14 @@
 {
-  "numberOfTerminals": 4,
-  "numberOfNumberGenerators": 2
+  "numberOfTerminals": {
+    "type": "number",
+    "value": "4"
+  },
+  "numberOfNumberGenerators": {
+    "type": "number",
+    "value": "2"
+  },
+  "enableDarkMode": {
+    "type": "boolean",
+    "value": "true"
+  }
 }

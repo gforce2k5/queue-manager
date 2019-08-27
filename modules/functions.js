@@ -22,10 +22,9 @@ module.exports = {
     const promises = [];
     const now = new Date();
     promises.push(this.getCustomersByDate(now));
-    promises.push(fs.readFile(`${__dirname}/../settings/settings.json`));
+    promises.push(this.loadData());
     try {
-      const [customers, settings] = await Promise.all(promises);
-      data.settings = JSON.parse(settings);
+      const customers = (await Promise.all(promises))[0];
       data.queue = customers.filter((customer) => !customer.accepted);
       if (customers.length == 0) {
         data.counter = 1;
@@ -56,10 +55,30 @@ module.exports = {
   },
 
   getCustomerTimes(customer) {
-    return {
-      waitTime: Math.floor((customer.acceptTime - customer.arrivalTime) / 1000),
-      resolveTime:
-        Math.floor((customer.resolveTime - customer.acceptTime) / 1000),
-    };
+    if (customer && customer.resolved) {
+      return {
+        waitTime:
+          Math.floor((customer.acceptTime - customer.arrivalTime) / 1000),
+        resolveTime:
+          Math.floor((customer.resolveTime - customer.acceptTime) / 1000),
+      };
+    } else {
+      return undefined;
+    }
+  },
+
+  async loadData() {
+    let settings =
+        await fs.readFile(`${__dirname}/../settings/settings.json`);
+    settings = JSON.parse(settings);
+    const form = {};
+
+    // eslint-disable-next-line guard-for-in
+    for (key in settings) {
+      form[key] = settings[key].type;
+      settings[key] = settings[key].value;
+    }
+    data.settings = settings;
+    data.form = form;
   },
 };

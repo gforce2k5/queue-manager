@@ -21,10 +21,12 @@ socket.on('dequeue-dash', (msg) => {
   customersServed.textContent = msg.customersServed;
   customersWaiting.textContent = msg.customersWaiting;
   data = [msg.customersWaiting, msg.customersServed];
-  lineChart.data.datasets[0].data.push(msg.lastCustomerTimes.waitTime);
-  lineChart.data.datasets[1].data.push(msg.lastCustomerTimes.resolveTime);
-  lineChart.data.labels.push(lineChart.data.labels.length + 1);
-  lineChart.update();
+  if (msg.lastCustomerTimes) {
+    lineChart.data.datasets[0].data.push(msg.lastCustomerTimes.waitTime);
+    lineChart.data.datasets[1].data.push(msg.lastCustomerTimes.resolveTime);
+    lineChart.data.labels.push(lineChart.data.labels.length + 1);
+    lineChart.update();
+  }
   updatePieChart();
 });
 

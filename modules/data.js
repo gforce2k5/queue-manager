@@ -5,6 +5,8 @@ module.exports = {
   hasInitialized: false,
   customersServed: undefined,
   lastCustomer: undefined,
+  resolvedCustomer: undefined,
   queue: [],
   settings: {},
+  form: {},
 };

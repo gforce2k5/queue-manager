@@ -51,14 +51,14 @@ router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
     promises.push(Customer.findByIdAndUpdate(req.params.id, {$set: {
       acceptTime: new Date(),
       accepted: true,
-    }}));
+    }}, {new: true}));
   }
 
   if (currentId != 'undefined' && currentId != '') {
     promises.push(Customer.findByIdAndUpdate(currentId, {$set: {
       resolveTime: new Date(),
       resolved: true,
-    }}));
+    }}, {new: true}));
   }
 
   try {
@@ -67,6 +67,7 @@ router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
       req.params.id != '0' ? {$set: {currentCustomer: customers[0]._id}}
                            : {$unset: {currentCustomer: undefined}});
     res.json(customers[0]);
+    data.resolvedCustomer = customers.find((customer) => customer.resolved);
   } catch (err) {
     console.log(err);
     res.json({error: 'Error'});

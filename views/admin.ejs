@@ -1,6 +1,7 @@
 <% include partials/header %>
 
 <div class="container">
+  <h1>עמוד ניהול המערכת</h1>
   <a href="/register">רישום משתמש חדש</a>
 
   <form action="/terminals?_method=DELETE" method="POST">
@@ -8,6 +9,21 @@
   </form>
 
   <a href="/admin/dashboard/">פנל ניהול</a>
+
+  <h2>הגדרות מערכת</h2>
+  <form method="POST">
+    <% form.forEach(field => { %>
+      <div class="form-group">
+        <label for="<%= field.name.kebab %>"><%= field.name.sentence %>:</label>
+        <% if (field.type == 'boolean') { %>
+          <% include partials/fields/boolean %>
+        <% } else { %>
+          <% include partials/fields/input %>
+        <% } %>
+      </div>
+    <% }); %>
+    <button class="btn btn-primary">שלח</button>
+  </form>
 </div>
 
 <% include partials/footer %>

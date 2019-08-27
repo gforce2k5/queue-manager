@@ -30,7 +30,8 @@ module.exports = (io) => {
       io.emit('dequeue-dash', {
         customersServed: data.customersServed,
         customersWaiting: data.queue.length,
-        lastCustomerTimes: functions.getCustomerTimes(data.lastCustomer),
+        lastCustomerTimes:
+          functions.getCustomerTimes(data.resolvedCustomer),
       });
     });
 
