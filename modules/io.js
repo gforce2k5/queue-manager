@@ -1,6 +1,6 @@
 const Terminal = require('../models/terminal');
 const data = require('./data');
-const functions = require('./functions');
+const {getCustomerTimes} = require('./functions');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -30,8 +30,7 @@ module.exports = (io) => {
       io.emit('dequeue-dash', {
         customersServed: data.customersServed,
         customersWaiting: data.queue.length,
-        lastCustomerTimes:
-          functions.getCustomerTimes(data.resolvedCustomer),
+        lastCustomerTimes: getCustomerTimes(data.resolvedCustomer),
       });
     });
 

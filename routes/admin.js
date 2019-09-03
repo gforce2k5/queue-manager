@@ -2,7 +2,8 @@ const changeCase = require('change-case');
 const express = require('express');
 const data = require('../modules/data');
 const fs = require('../modules/fs-promise');
-const middlewares = require('../modules/middlewares');
+const {isAdmin} = require('../modules/middlewares');
+const {errHandler} = require('../modules/functions');
 
 // ROUTERS
 const dataRoutes = require('./admin/data');
@@ -37,17 +38,18 @@ router.post('/', async (req, res) => {
     data.settings[ckey] = req.body[key];
     settings[ckey] = {type: data.form[ckey], value: req.body[key]};
   }
+
   try {
     await fs.writeFile(`${__dirname}/../settings/settings.json`, settings);
+    res.flash('success', 'ההגדרות נשמרו בהצלחה');
     res.redirect('/admin');
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    errHandler(req, res, err, '/admin');
   }
 });
 
 // MIDDLEWARES
-router.use(middlewares.isAdmin);
+router.use(isAdmin);
 
 // ROUTES
 router.use('/data', dataRoutes);

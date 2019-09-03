@@ -11,3 +11,10 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <% if (error && error.length > 0 || success && success.length > 0) { %>
+    <div class="container">
+        <div class="alert mt-2 alert-<%= error && error.length > 0 ? 'danger' : 'success' %>" role="alert">
+          <%= error && error.length > 0 ? error : success %>
+        </div>
+    </div>
+  <% } %>

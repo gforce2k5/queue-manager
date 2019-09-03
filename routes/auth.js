@@ -2,13 +2,14 @@ const express = require('express');
 const passport = require('passport');
 
 const data = require('../modules/data');
-const middlewares = require('../modules/middlewares');
+const {isUserLoggedIn, isAdmin} = require('../modules/middlewares');
 const User = require('../models/user');
 const Terminal = require('../models/terminal');
+const {errHandler} = require('../modules/functions');
 
 const router = new express.Router();
 
-router.get('/', middlewares.isUserLoggedIn, async (req, res) => {
+router.get('/', isUserLoggedIn, async (req, res) => {
   try {
     const terminals = await Terminal.find();
     res.render('index', {
@@ -21,26 +22,25 @@ router.get('/', middlewares.isUserLoggedIn, async (req, res) => {
       }),
     });
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    errHandler(req, res, err, '/');
   }
 });
 
-router.get('/register', middlewares.isAdmin, (req, res) => {
+router.get('/register', isAdmin, (req, res) => {
   res.render('auth/register', {pageTitle: 'Register'});
 });
 
-router.post('/register', middlewares.isAdmin, async (req, res) => {
+router.post('/register', isAdmin, async (req, res) => {
   const user = new User({...req.body.user, username: req.body.username});
   if (req.body.password !== req.body.password2) {
-    return res.send('Passwords do not match');
+    return errHandler(req, res, {message: 'הסיסמאות לא תואמות'}, '/register');
   }
   try {
     await User.register(user, req.body.password);
+    req.flash('success', 'המשתמש נרשם בהצלחה');
     res.redirect('/admin');
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    errHandler(req, res, err, '/admin');
   }
 });
 
@@ -56,6 +56,7 @@ router.post('/login', passport.authenticate('local', {
 
 router.get('/logout', (req, res) => {
   req.logout();
+  req.flash('success', 'יצאת בהצלחה מהמערכת');
   res.redirect('/login');
 });
 

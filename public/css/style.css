@@ -16,6 +16,16 @@
   border: 1px solid #010101;
 }
 
+.number.dark {
+  color: white;
+  background: #0005;
+}
+
+.number.light {
+  color: black;
+  background: #FFFA;
+}
+
 .centerxy {
   position: absolute;
   top: 50%;
@@ -31,4 +41,26 @@ a[href="javascript:;"] {
 
 img.active {
   filter: blur(5px);
+}
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url('/img/queue.jpg');
+  background-repeat: no-repeat;
+  background-position: 80% 22%;
+  background-size: cover;
+}
+
+.wrapper:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #0008;
 }

@@ -1,9 +1,9 @@
 const express = require('express');
-const functions = require('../modules/functions');
+const {getToken, generateToken} = require('../modules/functions');
 const Terminal = require('../models/terminal');
 const Customer = require('../models/customer');
 const data = require('../modules/data');
-const middlewares = require('../modules/middlewares');
+const {isUserLoggedIn} = require('../modules/middlewares');
 
 const router = new express.Router();
 
@@ -11,11 +11,11 @@ const router = new express.Router();
 
 const checkToken = (req, res, next) => {
   const id = req.body.id;
-  if (req.body.token == functions.getToken(id)) {
-    functions.generateToken(id);
+  if (req.body.token == getToken(id)) {
+    generateToken(id);
     next();
   } else {
-    res.status(500).json({error: 'Eroor'});
+    res.status(401).json({error: 'Invalid token'});
   }
 };
 
@@ -35,14 +35,14 @@ router.post('/', checkToken, async (req, res) => {
     });
     data.queue.push(customer);
     data.counter++;
-    res.json({c: customer.number, token: functions.getToken(req.body.id)});
+    res.json({c: customer.number, token: getToken(req.body.id)});
   } catch (err) {
     console.log(err);
-    res.status(500).json({error: 'Error'});
+    res.status(500).json({error: err.message});
   }
 });
 
-router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
+router.put('/:id', isUserLoggedIn, async (req, res) => {
   const currentId = req.body.currentId;
   const terminalId = req.body.terminalId;
   const promises = [];
@@ -70,7 +70,7 @@ router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
     data.resolvedCustomer = customers.find((customer) => customer.resolved);
   } catch (err) {
     console.log(err);
-    res.json({error: 'Error'});
+    res.json({error: err.message});
   }
 });
 

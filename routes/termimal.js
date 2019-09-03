@@ -1,13 +1,14 @@
 const express = require('express');
 const data = require('../modules/data');
-const middlewares = require('../modules/middlewares');
+const {isUserLoggedIn, isAdmin} = require('../modules/middlewares');
 const Customer = require('../models/customer');
 const Terminal = require('../models/terminal');
+const {errHandler} = require('../modules/functions');
 
 const router = new express.Router();
 
 // SHOW
-router.get('/:id', middlewares.isUserLoggedIn, async (req, res) => {
+router.get('/:id', isUserLoggedIn, async (req, res) => {
   try {
     const terminal =
       await Terminal.findById(req.params.id).populate('currentCustomer').exec();
@@ -17,26 +18,25 @@ router.get('/:id', middlewares.isUserLoggedIn, async (req, res) => {
       terminal: terminal,
     });
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    errHandler(req, res, err, '/');
   }
 });
 
 // UPDATE
-router.put('/:id', middlewares.isUserLoggedIn, async (req, res) => {
+router.put('/:id', isUserLoggedIn, async (req, res) => {
   try {
     await Terminal.findByIdAndUpdate(req.params.id, {$set: {
       currentCustomer: req.body.currentCustomer,
     }});
   } catch (err) {
-    res.sendStatus(500);
+    res.status(404).json({error: err.message});
     console.log(err);
   }
 });
 
 // DESTROY
 // CREATE
-router.delete('/', middlewares.isAdmin, async (req, res) => {
+router.delete('/', isAdmin, async (req, res) => {
   const p1 = Customer.deleteMany({resolved: false});
   const p2 = Terminal.deleteMany({});
   try {
@@ -49,10 +49,10 @@ router.delete('/', middlewares.isAdmin, async (req, res) => {
       }));
     }
     await Promise.all(promises);
+    req.flash('success', 'הטרמינלים אופסו בהצלחה');
     res.redirect('/admin');
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    errHandler(req, res, err, '/admin');
   }
 });
 

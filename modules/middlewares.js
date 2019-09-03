@@ -1,4 +1,5 @@
 const data = require('./data');
+const {errHandler} = require('./functions');
 
 module.exports = {
   isInitialized(req, res, next) {
@@ -7,20 +8,24 @@ module.exports = {
   },
 
   isUserLoggedIn(req, res, next) {
-    // if (req.user) next();
-    // else res.redirect('/login');
-    next();
+    if (req.isAuthenticated()) next();
+    else {
+      errHandler(req, res, {message: 'נא התחבר'}, '/login');
+    }
   },
 
   isAdmin(req, res, next) {
-    // if (req.user && req.user.isAdmin) next();
-    // else res.redirect('/login');
-    next();
+    if (req.isAuthenticated() && req.user.isAdmin) next();
+    else {
+      errHandler(req, res, {message: 'נא התחבר'}, '/login');
+    }
   },
 
   saveUser(req, res, next) {
     res.locals.user = req.user;
     res.locals.enableDarkMode = data.settings.enableDarkMode;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
     next();
   },
 

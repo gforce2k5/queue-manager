@@ -1,5 +1,5 @@
 const express = require('express');
-const functions = require('../modules/functions');
+const {generateToken, errHandler} = require('../modules/functions');
 const data = require('../modules/data');
 
 const router = new express.Router();
@@ -10,9 +10,11 @@ router.get('/', (req, res) => {
     res.render('number', {
       pageTitle: 'Get Number',
       id: req.query.id,
-      token: functions.generateToken(req.query.id),
+      token: generateToken(req.query.id),
     });
-  } else res.status(500).send('Error');
+  } else {
+    errHandler(req, res, {message: 'לא ניתן לפתוח מכשיר ניפוק פעמיים'}, '/');
+  };
 });
 
 module.exports = router;

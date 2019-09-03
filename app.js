@@ -1,8 +1,10 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const flash = require('connect-flash');
 const http = require('http');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
@@ -18,6 +20,7 @@ const User = require('./models/User');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const customerRoutes = require('./routes/customer');
+const helperRoutes = require('./routes/helper');
 const numberRoutes = require('./routes/number');
 const terminalRoutes = require('./routes/termimal');
 const viewRoutes = require('./routes/view');
@@ -40,7 +43,8 @@ mongoose.connect(process.env.DB_URL);
 // MIDDLEWARES
 const middlewares = require('./modules/middlewares');
 app.use(methodOverride('_method'));
-app.use(middlewares.logRequest);
+app.use(morgan('dev'));
+// app.use(middlewares.logRequest);
 app.use(express.static(`${__dirname}/public`));
 app.use(session({
   secret: process.env.SECRET,
@@ -49,6 +53,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 app.use(middlewares.saveUser);
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(middlewares.isInitialized);
@@ -65,6 +70,7 @@ functions.init();
 app.use('/', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/customers', customerRoutes);
+app.use('/helpers', helperRoutes);
 app.use('/numbers', numberRoutes);
 app.use('/terminals', terminalRoutes);
 app.use('/view', viewRoutes);
