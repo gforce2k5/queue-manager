@@ -15,7 +15,8 @@
   <input type="hidden" id="tid" value="<%= terminal.tid %>">
 </div>
 <script>
-  let currentCustomer = '<%= terminal.currentCustomer ? terminal.currentCustomer._id : '' %>';
+  let currentCustomer = '<%= terminal.currentCustomer ? terminal.currentCustomer._id : '
+  ' %>';
 </script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/terminal.js"></script>

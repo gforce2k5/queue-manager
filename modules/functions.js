@@ -43,7 +43,8 @@ module.exports = {
     const morning = new Date(
         date.getFullYear(),
         date.getMonth(),
-        date.getDate());
+        date.getDate()
+    );
     const nextDay = new Date(morning);
     nextDay.setDate(morning.getDate() + 1);
     return Customer.find({
@@ -57,10 +58,12 @@ module.exports = {
   getCustomerTimes(customer) {
     if (customer && customer.resolved) {
       return {
-        waitTime:
-          Math.floor((customer.acceptTime - customer.arrivalTime) / 1000),
-        resolveTime:
-          Math.floor((customer.resolveTime - customer.acceptTime) / 1000),
+        waitTime: Math.floor(
+            (customer.acceptTime - customer.arrivalTime) / 1000
+        ),
+        resolveTime: Math.floor(
+            (customer.resolveTime - customer.acceptTime) / 1000
+        ),
       };
     } else {
       return undefined;
@@ -68,8 +71,7 @@ module.exports = {
   },
 
   async loadData() {
-    let settings =
-        await fs.readFile(`${__dirname}/../settings/settings.json`);
+    let settings = await fs.readFile(`${__dirname}/../settings/settings.json`);
     settings = JSON.parse(settings);
     const form = {};
 
@@ -84,8 +86,8 @@ module.exports = {
 
   convertSecondsToString(num) {
     let hours = Math.floor(num / 3600);
-    let minutes = Math.floor((num - (hours * 3600)) / 60);
-    let seconds = num - (hours * 3600) - (minutes * 60);
+    let minutes = Math.floor((num - hours * 3600) / 60);
+    let seconds = num - hours * 3600 - minutes * 60;
     seconds = seconds.toFixed(0);
 
     if (hours < 10) hours = `0${hours}`;
@@ -98,5 +100,12 @@ module.exports = {
     req.flash('error', err.message);
     console.log(err);
     res.redirect(redirect);
+  },
+
+  rev(str) {
+    return str
+        .split('')
+        .reverse()
+        .join('');
   },
 };

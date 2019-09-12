@@ -43,14 +43,16 @@ acceptButton.addEventListener('click', async function() {
   body.append('currentId', currentCustomer);
   body.append('terminalId', document.querySelector('#id').value);
   try {
-    const response =
-      await fetch(`/customers/${lastCustomer.getAttribute('data-id')}`, {
-        method: 'PUT',
-        heasders: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body,
-      });
+    const response = await fetch(
+        `/customers/${lastCustomer.getAttribute('data-id')}`,
+        {
+          method: 'PUT',
+          heasders: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: body,
+        }
+    );
     const customer = await response.json();
     h1.textContent = customer.number;
     currentCustomer = customer._id;

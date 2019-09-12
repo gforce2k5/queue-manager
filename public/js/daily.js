@@ -1,6 +1,6 @@
-const customersWaitTimes =
-  JSON.parse(document.getElementById('customers-wait-time')
-      .value); // data from HTML script
+const customersWaitTimes = JSON.parse(
+    document.getElementById('customers-wait-time').value
+); // data from HTML script
 const socket = io();
 const customersServed = document.querySelector('#served-customers');
 const customersWaiting = document.querySelector('#waiting-customers');
@@ -27,17 +27,17 @@ socket.on('dequeue-dash', async (msg) => {
   data = [msg.customersWaiting, msg.customersServed];
   if (msg.lastCustomerTimes) {
     const lastAverageTime = parseFloat(averageWaitTime.value);
-    const newAverageTime =
-        calculateAverage(
-            lastAverageTime,
-            msg.lastCustomerTimes.waitTime,
-            lineChart.data.datasets[0].data.length
-        );
+    const newAverageTime = calculateAverage(
+        lastAverageTime,
+        msg.lastCustomerTimes.waitTime,
+        lineChart.data.datasets[0].data.length
+    );
     const diff = getPercentage(lastAverageTime, newAverageTime);
     showDiff(diff);
     averageWaitTime.value = newAverageTime;
-    const response =
-        await fetch(`/helpers/convertToTime?num=${newAverageTime}`);
+    const response = await fetch(
+        `/helpers/convertToTime?num=${newAverageTime}`
+    );
     const averageTimeString = await response.json();
     averageWaitTimeString.textContent = averageTimeString;
     updateLineChart(msg.lastCustomerTimes);
@@ -52,7 +52,7 @@ socket.on('dequeue-dash', async (msg) => {
 function updatePieChart(data) {
   pieChart.data.datasets[0].data = data;
   pieChart.update();
-};
+}
 
 /**
  * Updates the line chart
@@ -97,30 +97,34 @@ function showDiff(diff) {
 const lineChart = new Chart(lineCtx, {
   type: 'line',
   data: {
-    datasets: [{
-      data: customersWaitTimes.map((customer) => customer.waitTime),
-      backgroundColor: '#1897C6',
-      borderColor: '#1897C6',
-      label: 'זמן המתנה',
-      fill: false,
-    },
-    {
-      data: customersWaitTimes.map((customer) => customer.resolveTime),
-      backgroundColor: '#19C98E',
-      borderColor: '#19C98E',
-      label: 'זמן טיפול',
-      fill: false,
-    }],
+    datasets: [
+      {
+        data: customersWaitTimes.map((customer) => customer.waitTime),
+        backgroundColor: '#1897C6',
+        borderColor: '#1897C6',
+        label: 'זמן המתנה',
+        fill: false,
+      },
+      {
+        data: customersWaitTimes.map((customer) => customer.resolveTime),
+        backgroundColor: '#19C98E',
+        borderColor: '#19C98E',
+        label: 'זמן טיפול',
+        fill: false,
+      },
+    ],
     labels: [...Array(customersWaitTimes.length).keys()].map((key) => key + 1),
   },
   options: {
     scales: {
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'שניות',
+      yAxes: [
+        {
+          scaleLabel: {
+            display: true,
+            labelString: 'שניות',
+          },
         },
-      }],
+      ],
     },
   },
 });
@@ -128,17 +132,13 @@ const lineChart = new Chart(lineCtx, {
 const pieChart = new Chart(pieCtx, {
   type: 'doughnut',
   data: {
-    datasets: [{
-      data: data,
-      backgroundColor: [
-        '#1897C6',
-        '#19C98E',
-      ],
-    }],
-    labels: [
-      'לקוחות ממתינים',
-      'לקוחות שקיבלו שירות',
+    datasets: [
+      {
+        data: data,
+        backgroundColor: ['#1897C6', '#19C98E'],
+      },
     ],
+    labels: ['לקוחות ממתינים', 'לקוחות שקיבלו שירות'],
   },
   options: Chart.defaults.doughnut,
 });
@@ -151,5 +151,5 @@ const pieChart = new Chart(pieCtx, {
  */
 function getPercentage(lastValue, newValue) {
   if (lastValue == 0) return 0;
-  return ((lastValue - newValue) / lastValue * 100);
+  return ((lastValue - newValue) / lastValue) * 100;
 }

@@ -10,8 +10,9 @@ const router = new express.Router();
 // SHOW
 router.get('/:id', isUserLoggedIn, async (req, res) => {
   try {
-    const terminal =
-      await Terminal.findById(req.params.id).populate('currentCustomer').exec();
+    const terminal = await Terminal.findById(req.params.id)
+        .populate('currentCustomer')
+        .exec();
     if (data.activeTerminals[terminal.tid - 1]) return res.end();
     res.render('terminal', {
       pageTitle: `Terminal ${terminal.tid}`,
@@ -25,9 +26,11 @@ router.get('/:id', isUserLoggedIn, async (req, res) => {
 // UPDATE
 router.put('/:id', isUserLoggedIn, async (req, res) => {
   try {
-    await Terminal.findByIdAndUpdate(req.params.id, {$set: {
-      currentCustomer: req.body.currentCustomer,
-    }});
+    await Terminal.findByIdAndUpdate(req.params.id, {
+      $set: {
+        currentCustomer: req.body.currentCustomer,
+      },
+    });
   } catch (err) {
     res.status(404).json({error: err.message});
     console.log(err);
@@ -43,10 +46,12 @@ router.delete('/', isAdmin, async (req, res) => {
     await Promise.all([p1, p2]);
     const promises = [];
     for (let i = 0; i < data.settings.numberOfTerminals; i++) {
-      promises.push(Terminal.create({
-        currentCustomer: undefined,
-        tid: i + 1,
-      }));
+      promises.push(
+          Terminal.create({
+            currentCustomer: undefined,
+            tid: i + 1,
+          })
+      );
     }
     await Promise.all(promises);
     req.flash('success', 'הטרמינלים אופסו בהצלחה');

@@ -49,10 +49,13 @@ router.get('/login', (req, res) => {
   else res.redirect('/');
 });
 
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-}));
+router.post(
+    '/login',
+    passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+    })
+);
 
 router.get('/logout', (req, res) => {
   req.logout();

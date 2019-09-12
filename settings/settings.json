@@ -10,5 +10,9 @@
   "enableDarkMode": {
     "type": "boolean",
     "value": "false"
+  },
+  "enablePrinter": {
+    "type": "boolean",
+    "value": "true"
   }
 }

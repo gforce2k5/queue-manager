@@ -13,46 +13,46 @@
 
   <h3>מסכי הנפקת מספרים</h3>
   <ul class="list-unstyled" id="generator-list">
-  <% for (let i = 0; i < numberOfNumberGenerators; i++) { %>
+    <% for (let i = 0; i < numberOfNumberGenerators; i++) { %>
     <li class="media">
-    <img src="/img/monitor.png" width="100px" class="mr-3<%= activeGenerators[i] ? ' active' : '' %>" alt="מסך מחשב">
+      <img src="/img/monitor.png" width="100px" class="mr-3<%= activeGenerators[i] ? ' active' : '' %>" alt="מסך מחשב">
       <div class="media-body">
         <h5 class="mt-0 mb-1">
           <% if (activeGenerators[i]) { %>
-            <a href="javascript:;">
-          <% } else { %>
+          <a href="javascript:;">
+            <% } else { %>
             <a href="/numbers?id=<%= i %>">
-          <% } %>
-            מכשיר <%= i + 1 %>
-          </a>
+              <% } %>
+              מכשיר <%= i + 1 %>
+            </a>
         </h5>
         אלו מסכי לקחיחת המספרים לכל מכשיר יש את המסך הספציפי שלו.
       </div>
     </li>
-  <% } %>
+    <% } %>
   </ul>
 
   <h3>מסופים</h3>
   <ul class="list-unstyled row" id="terminal-list">
     <% terminals.forEach((terminal, index) => { %>
-      <li class="col-3">
-        <% if (terminal.active) { %>
-          <a href="javascript:;">
-            <img src="/img/monitor.png" width="100px" class="mr-3 active" alt="מסך מחשב">
+    <li class="col-3">
+      <% if (terminal.active) { %>
+      <a href="javascript:;">
+        <img src="/img/monitor.png" width="100px" class="mr-3 active" alt="מסך מחשב">
         <% } else { %>
-          <a href="/terminals/<%= terminal._id %>">
-            <img src="/img/monitor.png" width="100px" class="mr-3" alt="מסך מחשב">
-        <% } %>
+        <a href="/terminals/<%= terminal._id %>">
+          <img src="/img/monitor.png" width="100px" class="mr-3" alt="מסך מחשב">
+          <% } %>
           מסוף <%= index + 1 %>
         </a>
-      </li>
+    </li>
     <% }); %>
   </ul>
 
   <p><a href="/logout">יציאה</a></p>
 
   <% if (user && user.isAdmin) { %>
-    <p><a href="/admin">ניהול מערכת</a></p>
+  <p><a href="/admin">ניהול מערכת</a></p>
   <% } %>
 </div>
 <script src="/socket.io/socket.io.js"></script>

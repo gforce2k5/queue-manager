@@ -1,0 +1,9 @@
+<% include partials/header %>
+
+<div class="container">
+  <h3>שלום, מספרך הוא <%= customer.number %></h3>
+  <p>לפניך בתור <%= waitingBefore %></p>
+  <p>זמן הגעתך - <%= customer.arrivalTime.toLocaleTimeString('he-IL', { hour12: false }) %></p>
+</div>
+
+<% include partials/footer %>
