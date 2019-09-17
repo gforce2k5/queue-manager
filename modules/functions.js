@@ -108,4 +108,20 @@ module.exports = {
         .reverse()
         .join('');
   },
+
+  averageTimeArray(customers) {
+    const {
+      getCustomerTimes,
+    } = module.exports;
+    const arr = customers
+        .filter((customer) => customer.resolved)
+        .map(getCustomerTimes);
+    return [arr.length > 0 ? arr.reduce((acc, {
+      waitTime,
+    }) => acc + waitTime, 0) / arr.length : 0, arr];
+  },
+
+  dateToString(date) {
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  },
 };

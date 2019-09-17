@@ -36,6 +36,15 @@
       <canvas id="line"></canvas>
     </div>
   </div>
+  <div class="list-group">
+    <h6 class="list-group-header">זמני המתנה ממוצעים בשבוע האחרון</h6>
+    <% dailyTimeAverageLastWeek.forEach((day) => { %>
+    <div class="list-group-item justify-content-between">
+      <%= convertSecondsToString(day[1]) %>
+      <span class="ml-auto text-muted"><%= dateToString(day[0]) %></span>
+    </div>
+    <% }) %>
+  </div>
 </div>
 
 <input type="hidden" id="customers-wait-time" value="<%= customersWaitTime %>">

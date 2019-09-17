@@ -2,7 +2,9 @@ const ThermalPrinter = require('node-thermal-printer').printer;
 const PrinterTypes = require('node-thermal-printer').types;
 const qr = require('qr-image');
 require('dotenv').config();
-const {rev} = require('./functions');
+const {
+  rev,
+} = require('./functions');
 
 const printer = new ThermalPrinter({
   type: PrinterTypes.EPSON,
@@ -17,7 +19,10 @@ const printer = new ThermalPrinter({
 });
 
 const createQR = (customerId) => {
-  const {HOSTNAME, PORT} = process.env;
+  const {
+    HOSTNAME,
+    PORT,
+  } = process.env;
   return qr.imageSync(`${HOSTNAME}:${PORT}/customers/${customerId}`, {
     type: 'png',
     margin: 4,
@@ -53,8 +58,3 @@ module.exports = {
     }
   },
 };
-
-// module.exports.printCustomer({
-//   _id: '1234',
-//   number: 1,
-// }).then(() => console.log('YAY')).catch((err) => console.log(err));

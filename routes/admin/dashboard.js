@@ -3,37 +3,34 @@ const data = require('../../modules/data');
 const {
   getCustomersByDate,
   convertSecondsToString,
+  dateToString,
 } = require('../../modules/functions');
-const {errHandler} = require('../../modules/functions');
+const {
+  errHandler,
+  averageTimeArray,
+} = require('../../modules/functions');
 
 const router = new express.Router();
 
 router.get('/', async (req, res) => {
   try {
     const customers = await getCustomersByDate(new Date());
-    const customersWaitTime = customers
-        .filter((customer) => customer.resolved)
-        .map((customer) => {
-          const waitTime = Math.floor(
-              (customer.acceptTime - customer.arrivalTime) / 1000
-          );
-          const resolveTime = Math.floor(
-              (customer.resolveTime - customer.acceptTime) / 1000
-          );
-          return {waitTime, resolveTime};
-        });
-    const averageWaitTime =
-      customersWaitTime.length > 0
-        ? customersWaitTime.reduce((acc, times) => acc + times.waitTime, 0) /
-          customersWaitTime.length
-        : 0;
+    const [averageWaitTime, customersWaitTime] = averageTimeArray(customers);
+    let dailyTimeAverageLastWeek = Array(7).fill().map(async (day, i) => {
+      const date = new Date(new Date() - (i + 1) * 24 * 60 * 60 * 1000);
+      return [date, (averageTimeArray(await getCustomersByDate(date)))[0]];
+    });
+    dailyTimeAverageLastWeek = await Promise.all(dailyTimeAverageLastWeek);
     res.render('dashboard/daily', {
       pageTitle: 'Dashboard',
       customersServed: data.customersServed,
       customersWaiting: data.queue.length,
       customersWaitTime: JSON.stringify(customersWaitTime),
       averageWaitTimeString: convertSecondsToString(averageWaitTime),
-      averageWaitTime: averageWaitTime,
+      averageWaitTime,
+      dailyTimeAverageLastWeek,
+      convertSecondsToString,
+      dateToString,
     });
   } catch (err) {
     errHandler(req, res, err, '/admin');

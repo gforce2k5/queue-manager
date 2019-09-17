@@ -2,14 +2,21 @@ const changeCase = require('change-case');
 const express = require('express');
 const data = require('../modules/data');
 const fs = require('../modules/fs-promise');
-const {isAdmin} = require('../modules/middlewares');
-const {errHandler} = require('../modules/functions');
+const {
+  isAdmin,
+} = require('../modules/middlewares');
+const {
+  errHandler,
+} = require('../modules/functions');
 
 // ROUTERS
 const dataRoutes = require('./admin/data');
 const dashboardRoutes = require('./admin/dashboard');
 
 const router = new express.Router();
+
+// MIDDLEWARES
+router.use(isAdmin);
 
 router.get('/', (req, res) => {
   const formData = [];
@@ -36,7 +43,10 @@ router.post('/', async (req, res) => {
   for (key in req.body) {
     const ckey = changeCase.camel(key);
     data.settings[ckey] = req.body[key];
-    settings[ckey] = {type: data.form[ckey], value: req.body[key]};
+    settings[ckey] = {
+      type: data.form[ckey],
+      value: req.body[key],
+    };
   }
 
   try {
@@ -47,9 +57,6 @@ router.post('/', async (req, res) => {
     errHandler(req, res, err, '/admin');
   }
 });
-
-// MIDDLEWARES
-router.use(isAdmin);
 
 // ROUTES
 router.use('/data', dataRoutes);
