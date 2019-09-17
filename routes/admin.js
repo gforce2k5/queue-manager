@@ -2,12 +2,8 @@ const changeCase = require('change-case');
 const express = require('express');
 const data = require('../modules/data');
 const fs = require('../modules/fs-promise');
-const {
-  isAdmin,
-} = require('../modules/middlewares');
-const {
-  errHandler,
-} = require('../modules/functions');
+const { isAdmin } = require('../modules/middlewares');
+const { errHandler } = require('../modules/functions');
 
 // ROUTERS
 const dataRoutes = require('./admin/data');
@@ -25,15 +21,15 @@ router.get('/', (req, res) => {
     formData.push({
       name: {
         kebab: changeCase.kebab(key),
-        sentence: changeCase.sentenceCase(key),
+        sentence: changeCase.sentenceCase(key)
       },
       type: data.form[key],
-      value: data.settings[key],
+      value: data.settings[key]
     });
   }
   res.render('admin', {
     pageTitle: 'Admin',
-    form: formData,
+    form: formData
   });
 });
 
@@ -45,7 +41,7 @@ router.post('/', async (req, res) => {
     data.settings[ckey] = req.body[key];
     settings[ckey] = {
       type: data.form[ckey],
-      value: req.body[key],
+      value: req.body[key]
     };
   }
 

@@ -1,6 +1,6 @@
 const express = require('express');
-const {isAdmin} = require('../modules/middlewares');
-const {convertSecondsToString} = require('../modules/functions');
+const { isAdmin } = require('../modules/middlewares');
+const { convertSecondsToString } = require('../modules/functions');
 const router = new express.Router();
 
 router.get('/convertToTime', isAdmin, (req, res) => {

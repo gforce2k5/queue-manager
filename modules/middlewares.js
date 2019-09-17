@@ -1,5 +1,5 @@
 const data = require('./data');
-const {errHandler} = require('./functions');
+const { errHandler } = require('./functions');
 
 module.exports = {
   isInitialized(req, res, next) {
@@ -10,14 +10,28 @@ module.exports = {
   isUserLoggedIn(req, res, next) {
     if (req.isAuthenticated()) next();
     else {
-      errHandler(req, res, {message: 'נא התחבר'}, '/login');
+      errHandler(
+        req,
+        res,
+        {
+          message: 'נא התחבר'
+        },
+        '/login'
+      );
     }
   },
 
   isAdmin(req, res, next) {
     if (req.isAuthenticated() && req.user.isAdmin) next();
     else {
-      errHandler(req, res, {message: 'נא התחבר'}, '/login');
+      errHandler(
+        req,
+        res,
+        {
+          message: 'נא התחבר'
+        },
+        '/login'
+      );
     }
   },
 
@@ -32,5 +46,5 @@ module.exports = {
   logRequest(req, res, next) {
     console.log(req.connection.remoteAddress, req.path, req.method);
     next();
-  },
+  }
 };

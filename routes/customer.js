@@ -1,11 +1,11 @@
 const express = require('express');
-const {getToken, generateToken} = require('../modules/functions');
+const { getToken, generateToken } = require('../modules/functions');
 const Terminal = require('../models/terminal');
 const Customer = require('../models/customer');
 const data = require('../modules/data');
-const {isUserLoggedIn} = require('../modules/middlewares');
-const {printCustomer} = require('../modules/printer');
-const {errHandler} = require('../modules/functions');
+const { isUserLoggedIn } = require('../modules/middlewares');
+const { printCustomer } = require('../modules/printer');
+const { errHandler } = require('../modules/functions');
 
 const router = new express.Router();
 
@@ -17,7 +17,9 @@ const checkToken = (req, res, next) => {
     generateToken(id);
     next();
   } else {
-    res.status(401).json({error: 'Invalid token'});
+    res.status(401).json({
+      error: 'Invalid token'
+    });
   }
 };
 
@@ -34,9 +36,9 @@ router.get('/:id', async (req, res) => {
       res.render('customer', {
         pageTitle: 'לקוח',
         customer,
-        waitingBefore: data.queue.findIndex((foundCustomer) => {
+        waitingBefore: data.queue.findIndex(foundCustomer => {
           return foundCustomer._id.toString() == customer._id.toString();
-        }),
+        })
       });
     } else {
       res.sendStatus(404);
@@ -52,17 +54,22 @@ router.post('/', checkToken, async (req, res) => {
       number: data.counter,
       arrivalTime: new Date(),
       email: req.body.email,
-      resolved: false,
+      resolved: false
     });
     data.queue.push(customer);
     data.counter++;
-    res.json({c: customer.number, token: getToken(req.body.id)});
+    res.json({
+      c: customer.number,
+      token: getToken(req.body.id)
+    });
     if (data.settings.enablePrinter == 'true') {
       await printCustomer(customer);
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({error: err.message});
+    res.status(500).json({
+      error: err.message
+    });
   }
 });
 
@@ -73,47 +80,61 @@ router.put('/:id', isUserLoggedIn, async (req, res) => {
 
   if (req.params.id != '0') {
     promises.push(
-        Customer.findByIdAndUpdate(
-            req.params.id,
-            {
-              $set: {
-                acceptTime: new Date(),
-                accepted: true,
-              },
-            },
-            {new: true}
-        )
+      Customer.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            acceptTime: new Date(),
+            accepted: true
+          }
+        },
+        {
+          new: true
+        }
+      )
     );
   }
 
   if (currentId != 'undefined' && currentId != '') {
     promises.push(
-        Customer.findByIdAndUpdate(
-            currentId,
-            {
-              $set: {
-                resolveTime: new Date(),
-                resolved: true,
-              },
-            },
-            {new: true}
-        )
+      Customer.findByIdAndUpdate(
+        currentId,
+        {
+          $set: {
+            resolveTime: new Date(),
+            resolved: true
+          }
+        },
+        {
+          new: true
+        }
+      )
     );
   }
 
   try {
     const customers = await Promise.all(promises);
     await Terminal.findByIdAndUpdate(
-        terminalId,
+      terminalId,
       req.params.id != '0'
-        ? {$set: {currentCustomer: customers[0]._id}}
-        : {$unset: {currentCustomer: undefined}}
+        ? {
+            $set: {
+              currentCustomer: customers[0]._id
+            }
+          }
+        : {
+            $unset: {
+              currentCustomer: undefined
+            }
+          }
     );
     res.json(customers[0]);
-    data.resolvedCustomer = customers.find((customer) => customer.resolved);
+    data.resolvedCustomer = customers.find(customer => customer.resolved);
   } catch (err) {
     console.log(err);
-    res.json({error: err.message});
+    res.json({
+      error: err.message
+    });
   }
 });
 

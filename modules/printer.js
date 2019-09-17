@@ -2,9 +2,7 @@ const ThermalPrinter = require('node-thermal-printer').printer;
 const PrinterTypes = require('node-thermal-printer').types;
 const qr = require('qr-image');
 require('dotenv').config();
-const {
-  rev,
-} = require('./functions');
+const { rev } = require('./functions');
 
 const printer = new ThermalPrinter({
   type: PrinterTypes.EPSON,
@@ -14,25 +12,22 @@ const printer = new ThermalPrinter({
   removeSpecialCharacters: false,
   lineCharacter: '=',
   options: {
-    timeout: 5000,
-  },
+    timeout: 5000
+  }
 });
 
-const createQR = (customerId) => {
-  const {
-    HOSTNAME,
-    PORT,
-  } = process.env;
+const createQR = customerId => {
+  const { HOSTNAME, PORT } = process.env;
   return qr.imageSync(`${HOSTNAME}:${PORT}/customers/${customerId}`, {
     type: 'png',
     margin: 4,
     size: 10,
-    ec_level: 'M',
+    ec_level: 'M'
   });
 };
 
 module.exports = {
-  printCustomer: async (customer) => {
+  printCustomer: async customer => {
     const printerConnectd = await printer.isPrinterConnected();
     if (!printerConnectd) {
       throw new Error('Printer is not connected');
@@ -56,5 +51,5 @@ module.exports = {
     } finally {
       printer.clear();
     }
-  },
+  }
 };

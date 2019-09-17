@@ -25,7 +25,7 @@ module.exports = {
     promises.push(this.loadData());
     try {
       const customers = (await Promise.all(promises))[0];
-      data.queue = customers.filter((customer) => !customer.accepted);
+      data.queue = customers.filter(customer => !customer.accepted);
       if (customers.length == 0) {
         data.counter = 1;
       } else {
@@ -41,17 +41,17 @@ module.exports = {
 
   async getCustomersByDate(date) {
     const morning = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
     );
     const nextDay = new Date(morning);
     nextDay.setDate(morning.getDate() + 1);
     return Customer.find({
       arrivalTime: {
         $gte: morning,
-        $lt: nextDay,
-      },
+        $lt: nextDay
+      }
     });
   },
 
@@ -59,11 +59,11 @@ module.exports = {
     if (customer && customer.resolved) {
       return {
         waitTime: Math.floor(
-            (customer.acceptTime - customer.arrivalTime) / 1000
+          (customer.acceptTime - customer.arrivalTime) / 1000
         ),
         resolveTime: Math.floor(
-            (customer.resolveTime - customer.acceptTime) / 1000
-        ),
+          (customer.resolveTime - customer.acceptTime) / 1000
+        )
       };
     } else {
       return undefined;
@@ -104,24 +104,25 @@ module.exports = {
 
   rev(str) {
     return str
-        .split('')
-        .reverse()
-        .join('');
+      .split('')
+      .reverse()
+      .join('');
   },
 
   averageTimeArray(customers) {
-    const {
-      getCustomerTimes,
-    } = module.exports;
+    const { getCustomerTimes } = module.exports;
     const arr = customers
-        .filter((customer) => customer.resolved)
-        .map(getCustomerTimes);
-    return [arr.length > 0 ? arr.reduce((acc, {
-      waitTime,
-    }) => acc + waitTime, 0) / arr.length : 0, arr];
+      .filter(customer => customer.resolved)
+      .map(getCustomerTimes);
+    return [
+      arr.length > 0
+        ? arr.reduce((acc, { waitTime }) => acc + waitTime, 0) / arr.length
+        : 0,
+      arr
+    ];
   },
 
   dateToString(date) {
     return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-  },
+  }
 };

@@ -35,6 +35,20 @@
   },
   "devDependencies": {
     "eslint": "^6.2.2",
-    "eslint-config-google": "^0.13.0"
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.5",
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

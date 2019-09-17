@@ -1,7 +1,7 @@
 const socket = io({
   query: {
-    nid: document.querySelector('#id').value,
-  },
+    nid: document.querySelector('#id').value
+  }
 });
 
 document.querySelector('#get-number').addEventListener('click', function() {
@@ -25,11 +25,11 @@ async function getNumber() {
   body.append('email', email.value);
   const response = await fetch('/customers', {
     heasders: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
     method: 'POST',
     body: body,
-    cache: 'default',
+    cache: 'default'
   });
   const number = await response.json();
   if (number.error) {

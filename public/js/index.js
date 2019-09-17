@@ -3,19 +3,19 @@ const socket = io();
 const terminalList = document.querySelector('#terminal-list');
 const generatorList = document.querySelector('#generator-list');
 
-socket.on('new-terminal', (tid) => {
+socket.on('new-terminal', tid => {
   blurImage(terminalList, tid - 1);
 });
 
-socket.on('new-generator', (id) => {
+socket.on('new-generator', id => {
   blurImage(generatorList, id);
 });
 
-socket.on('terminal-disconnect', (terminal) => {
+socket.on('terminal-disconnect', terminal => {
   unblurImage(terminalList, terminal.tid - 1, `/terminals/${terminal._id}`);
 });
 
-socket.on('generator-disconnect', (id) => {
+socket.on('generator-disconnect', id => {
   unblurImage(generatorList, id, `/numbers?id=${id}`);
 });
 

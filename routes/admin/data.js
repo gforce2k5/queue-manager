@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 const Costumer = require('../../models/customer');
-const {getCustomerTimes} = require('../../modules/functions');
+const { getCustomerTimes } = require('../../modules/functions');
 
 router.get('/', async (req, res) => {
   const start = new Date() - 24 * 60 * 60 * 1000;
@@ -18,8 +18,8 @@ async function getCustomers(start, end = Date.now()) {
     resolved: true,
     arrivalTime: {
       $gte: start,
-      $lte: end,
-    },
+      $lte: end
+    }
   });
   return customers.map(getCustomerTimes);
 }

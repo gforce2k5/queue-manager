@@ -5,8 +5,8 @@ const h1 = document.querySelector('#current-customer');
 const list = document.querySelector('#list');
 const socket = io({
   query: {
-    tid: document.querySelector('#tid').value,
-  },
+    tid: document.querySelector('#tid').value
+  }
 });
 (async () => {
   const response = await fetch('/customers');
@@ -17,7 +17,7 @@ const socket = io({
   customers.forEach(addCustomer);
 })();
 
-const addCustomer = (customer) => {
+const addCustomer = customer => {
   list.innerHTML += `
     <li class="list-group-item" data-id="${customer._id}">
       ${customer.number} - ${customer.email ? customer.email : ''}
@@ -27,7 +27,7 @@ const addCustomer = (customer) => {
   endDayButton.style.display = 'none';
 };
 
-const removeCustomer = (customer) => {
+const removeCustomer = customer => {
   list.querySelector(`li[data-id="${customer._id}"]`).remove();
   if (list.querySelectorAll('li').length == 0) {
     acceptButton.disabled = true;
@@ -44,14 +44,14 @@ acceptButton.addEventListener('click', async function() {
   body.append('terminalId', document.querySelector('#id').value);
   try {
     const response = await fetch(
-        `/customers/${lastCustomer.getAttribute('data-id')}`,
-        {
-          method: 'PUT',
-          heasders: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: body,
-        }
+      `/customers/${lastCustomer.getAttribute('data-id')}`,
+      {
+        method: 'PUT',
+        heasders: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+      }
     );
     const customer = await response.json();
     h1.textContent = customer.number;
@@ -76,9 +76,9 @@ endDayButton.addEventListener('click', async function() {
     await fetch(`/customers/0`, {
       method: 'PUT',
       heasders: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: body,
+      body: body
     });
     h1.textContent = '';
     currentCustomer = undefined;
@@ -89,12 +89,12 @@ endDayButton.addEventListener('click', async function() {
   h1.textContent = '';
 });
 
-socket.on('enqueue-done', (msg) => {
+socket.on('enqueue-done', msg => {
   customer = msg;
   addCustomer(customer);
 });
 
-socket.on('dequeue-done', (msg) => {
+socket.on('dequeue-done', msg => {
   customer = msg.customer;
   if (customer) removeCustomer(customer);
 });

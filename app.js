@@ -46,16 +46,22 @@ app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 // app.use(middlewares.logRequest);
 app.use(express.static(`${__dirname}/public`));
-app.use(session({
-  secret: process.env.SECRET,
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(middlewares.saveUser);
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 app.use(middlewares.isInitialized);
 
 // PASSPORT MIDDLEWARES
