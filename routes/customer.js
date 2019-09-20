@@ -41,7 +41,7 @@ router.get('/:id', async (req, res) => {
         })
       });
     } else {
-      res.sendStatus(404);
+      res.status(404).send('תורך עבר');
     }
   } catch (err) {
     errHandler(req, res, err, '/');
