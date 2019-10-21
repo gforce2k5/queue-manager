@@ -8,5 +8,6 @@ module.exports = {
   resolvedCustomer: undefined,
   queue: [],
   settings: {},
-  form: {}
+  form: {},
+  newInstallation: false
 };

@@ -3,8 +3,13 @@ const { errHandler } = require('./functions');
 
 module.exports = {
   isInitialized(req, res, next) {
-    if (!data.hasInitialized) res.status(500).send('Internal server error');
-    else next();
+    if (!data.hasInitialized)
+      return res.status(500).send('Internal server error');
+    if (data.newInstallation) {
+      if (req.path == '/register') return next();
+      return res.redirect('/register');
+    }
+    next();
   },
 
   isUserLoggedIn(req, res, next) {
@@ -22,17 +27,16 @@ module.exports = {
   },
 
   isAdmin(req, res, next) {
-    if (req.isAuthenticated() && req.user.isAdmin) next();
-    else {
-      errHandler(
-        req,
-        res,
-        {
-          message: 'נא התחבר'
-        },
-        '/login'
-      );
-    }
+    if (req.isAuthenticated() && req.user.isAdmin) return next();
+    if (data.newInstallation && req.path == '/register') return next();
+    errHandler(
+      req,
+      res,
+      {
+        message: 'נא התחבר'
+      },
+      '/login'
+    );
   },
 
   saveUser(req, res, next) {

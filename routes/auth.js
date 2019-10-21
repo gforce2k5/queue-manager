@@ -28,14 +28,16 @@ router.get('/', isUserLoggedIn, async (req, res) => {
 
 router.get('/register', isAdmin, (req, res) => {
   res.render('auth/register', {
-    pageTitle: 'Register'
+    pageTitle: 'Register',
+    admin: data.newInstallation
   });
 });
 
 router.post('/register', isAdmin, async (req, res) => {
   const user = new User({
     ...req.body.user,
-    username: req.body.username
+    username: req.body.username,
+    isAdmin: req.body.isAdmin === 'on'
   });
   if (req.body.password !== req.body.password2) {
     return errHandler(
@@ -49,6 +51,7 @@ router.post('/register', isAdmin, async (req, res) => {
   }
   try {
     await User.register(user, req.body.password);
+    if (user.isAdmin) data.newInstallation = false;
     req.flash('success', 'המשתמש נרשם בהצלחה');
     res.redirect('/admin');
   } catch (err) {

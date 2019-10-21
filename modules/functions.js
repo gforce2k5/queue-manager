@@ -3,6 +3,7 @@ const uuidv4 = require('uuid/v4');
 const fs = require('./fs-promise');
 const data = require('./data');
 const Customer = require('../models/customer');
+const User = require('../models/user');
 
 // DATA STORAGE
 const tokens = [];
@@ -23,8 +24,11 @@ module.exports = {
     const now = new Date();
     promises.push(this.getCustomersByDate(now));
     promises.push(this.loadData());
+    promises.push(User.find({ isAdmin: true }));
     try {
-      const customers = (await Promise.all(promises))[0];
+      const promisesResult = await Promise.all(promises);
+      const customers = promisesResult[0];
+      data.newInstallation = promisesResult[2].length === 0;
       data.queue = customers.filter(customer => !customer.accepted);
       if (customers.length == 0) {
         data.counter = 1;
