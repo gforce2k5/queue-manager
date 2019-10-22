@@ -13,6 +13,6 @@
   },
   "enablePrinter": {
     "type": "boolean",
-    "value": "true"
+    "value": "false"
   }
 }
